@@ -23,9 +23,8 @@ Output will be created using the filename `HDX0.hda` where `X` is the SCSI targe
 
 * This code is pretty rough and tumble. It doesn't modify the source files in any way, so your SCSI2SD source images shouldn't be affected. But the resultant `.hda` images it produces may or may not work.
 * SCSI LUNs aren't supported.
-* This tool depends on the XML elements being in a certain precise order.
+* This tool depends on the XML elements being in the following exact order. If your XML file is ordered differently, you'll have to rearrange it. (or fix the script to work with arbitrary orders and submit a pull request `;-)`)
   * `SCSITarget`
   * `sdSectorStart`
   * `scsiSectors`
   * `bytesPerSector`
-  If your XML file is in a different order, you'll have to rearrange it. (or fix the script to work with arbitrary orders and submit a pull request `;-)`)
