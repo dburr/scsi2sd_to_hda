@@ -7,7 +7,7 @@ Recently I finally finished restoring my beloved SE/30. I'm a major Unix geek, a
 
 # Requirements
 
-This script should work with almost any Unix-like system, including Linux and OS X. The only requirement is that you have the `[bash](https://www.gnu.org/software/bash/)` shell.
+This script should work with almost any Unix-like system, including Linux and OS X. The only requirement is that you have the [`bash`](https://www.gnu.org/software/bash/) shell.
 
 # Usage
 
