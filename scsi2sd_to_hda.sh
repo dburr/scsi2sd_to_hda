@@ -113,12 +113,24 @@ while read_dom; do
     # do we have everything we need?
     if [ $READY -eq 1 ]; then
       READY=0
+      CALCULATED_FILE_SIZE=$((SECTOR_COUNT * BYTES_PER_SECTOR))
       # construct filename and appropriate dd command
       OUT_FILE="HD${TARGET}0_$BYTES_PER_SECTOR.hda"
       COMMAND="dd if=$IMG_FILE of=$OUT_FILE bs=$BYTES_PER_SECTOR skip=$SECTOR_START count=$SECTOR_COUNT"
       echo "writing SCSI target $TARGET to \`$OUT_FILE' using:"
       echo "$ $COMMAND"
       $COMMAND
+      echo "file should be $CALCULATED_FILE_SIZE in size"
+      ACTUAL_FILE_SIZE=$(stat -c%s "$OUT_FILE")
+      if [ $ACTUAL_FILE_SIZE -eq $CALCULATED_FILE_SIZE ]; then
+        echo "it is"
+      else
+        ZEROS_TO_PAD=$((CALCULATED_FILE_SIZE - ACTUAL_FILE_SIZE))
+        echo "it is NOT! Padding with $ZEROS_TO_PAD zeros."
+        truncate -s $ZEROS_TO_PAD /tmp/padding$$
+        cat /tmp/padding$$ >> "$OUT_FILE"
+        rm -f /tmp/padding$$
+      fi
       echo "done"
       echo ""
     fi
