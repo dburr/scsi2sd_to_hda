@@ -42,6 +42,22 @@ LOOKING_FOR_BYTES_PER_SECTOR=0
 BYTES_PER_SECTOR=0
 READY=0
 
+# if we are OSX, need "gstat" from homebrew
+if [ "$(uname -s)" = "Darwin" ]; then
+  if ! [ -x "$(command -v gstat)" ]; then
+    echo "ERROR: this command requires the GNU version of \`stat'. It may be installed"
+    echo "through Hombrew. Follow the instructions at https://brew.sh/ to install"
+    echo "Homebrew, then install the GNU coreutils package by typing"
+    echo "\`brew install coreutils'."
+    exit 1
+  fi
+  # gstat should exist, so we continue
+  STAT="gstat"
+else
+	# assume we're GNU/linux, so use regular "stat" command
+  STAT="stat"
+fi
+
 # argument processing
 if [ $# -ne 2 ] ; then
   echo "usage: $(basename $0) image-file xml-file"
@@ -121,7 +137,7 @@ while read_dom; do
       echo "$ $COMMAND"
       $COMMAND
       echo "file should be $CALCULATED_FILE_SIZE in size"
-      ACTUAL_FILE_SIZE=$(stat -c%s "$OUT_FILE")
+      ACTUAL_FILE_SIZE=$($STAT -c%s "$OUT_FILE")
       if [ $ACTUAL_FILE_SIZE -eq $CALCULATED_FILE_SIZE ]; then
         echo "it is"
       else
